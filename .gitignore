@@ -1,5 +1,16 @@
-# API key and secret
+# API key/secret and pem file to mongo DB
 *.key
+*.pem
+
+# Private foler(s)
+private
+
+# App folder (temporary)
+app
+
+# Flask and dash related (temporary)
+*flask*
+*dash*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

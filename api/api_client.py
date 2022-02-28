@@ -11,7 +11,7 @@ import hashlib
 import hmac
 import base64
 
-import version
+from api import version
 
 class API(object):
     """ Maintains a single session between this machine and Kraken.

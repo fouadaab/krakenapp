@@ -9,6 +9,8 @@ fastapi==0.74.0
 h11==0.13.0
 httptools==0.3.0
 idna==3.3
+Jinja2==3.0.3
+MarkupSafe==2.1.0
 pycparser==2.21
 pydantic==1.9.0
 python-dotenv==0.19.2
