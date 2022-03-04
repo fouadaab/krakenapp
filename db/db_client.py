@@ -1,22 +1,22 @@
-from enums import class_enumerators
+from core.config import settings
 from sshtunnel import SSHTunnelForwarder
 import pymongo
 import sshtunnel
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 
 class MongoDB():
 
     def __init__(self):
-        self.ssh_tunnel_host = class_enumerators.Host.PUBLIC_ADDRESS
-        self.ssh_tunnel_port = class_enumerators.Ports.SSH_TUNNEL_PORT
-        self.ssh_tunnel_user = class_enumerators.Host.USER
-        self.ssh_tunnel_pkey = f'./{class_enumerators.Host.KEY_FOLDER}/{class_enumerators.Host.KEY_FILE}'
-        self.localhost = class_enumerators.Host.LOCALHOST
-        self.db_host = class_enumerators.Host.PRIVATE_ADDRESS
-        self.db_port = class_enumerators.Ports.DB_PORT
+        self.ssh_tunnel_host = settings.PUBLIC_ADDRESS
+        self.ssh_tunnel_port = settings.SSH_TUNNEL_PORT
+        self.ssh_tunnel_user = settings.USER
+        self.ssh_tunnel_pkey = f'./{settings.KEY_FOLDER}/{settings.KEY_FILE}'
+        self.localhost = settings.LOCALHOST
+        self.db_host = settings.PRIVATE_ADDRESS
+        self.db_port = settings.DB_PORT
         self.server = self.ssh_server()
-        self.docs: List[Dict[str, Any]] = list()
+        self.user: Dict[str, Any] = dict()
 
     def ssh_server(self) -> sshtunnel.SSHTunnelForwarder:
         """_summary_
@@ -32,12 +32,13 @@ class MongoDB():
             local_bind_address=(self.localhost, self.db_port)
         )
 
-    def db_find(
+    def db_find_user(
         self,
         db_name: str,
         db_col: str,
         db_admin: str,
         db_pass: str,
+        username: str,
     ) -> None:
         """_summary_
 
@@ -59,10 +60,12 @@ class MongoDB():
             db = client[db_name]        
             # mydict = { "userid": 2, "username": "Susana", "password": "password456" }
             # x = db[db_col].insert_one(mydict)
-            mydoc = db[db_col].find()
-            
-            for doc in mydoc:
-                self.docs.append(doc)
+            mydoc = db[db_col].find({'username': username})
+
+            for i, doc in enumerate(mydoc):
+                if i>0:
+                    raise ValueError(f"Duplicated User '{doc['username']}' in the DataBase Collection")
+                self.user = doc
             
         return None
             
