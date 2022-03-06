@@ -1,5 +1,4 @@
 import enum
-import os
 
 class PathNames(str, enum.Enum):
     KEYS_FOLDER = 'keys'
@@ -12,3 +11,6 @@ class Currency(str, enum.Enum):
 
 class Jinja(str, enum.Enum):
     TEMPLATE_FOLDER = 'templates'
+
+class TimeZones(str, enum.Enum):
+    BERLIN = "Europe/Berlin"  # AWS Host in Frankfurt (DE)

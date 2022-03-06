@@ -28,7 +28,7 @@ class Settings:
     DB_PORT = 27017
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30  # in mins
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30*60  # 30*60s
     ALGORITHM = "HS256"
 
 
