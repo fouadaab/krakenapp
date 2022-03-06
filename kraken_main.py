@@ -4,18 +4,17 @@ from core.config import settings
 from apis.base import api_router
 from webapps.base import api_router as web_app_router
 from krakenapi.api_client import API as kraken_api
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 import utils
 import uvicorn
 from pathlib import Path
 import dash
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output, State
-from dash import dcc, html
 from app.dashapp.layout import layout
 from app.dashapp.callbacks import register_callbacks
 from starlette.middleware.wsgi import WSGIMiddleware
+
 
 root_path = Path('.')
 
@@ -82,11 +81,6 @@ def start_application():
     return app
 
 app = start_application()
-
-@app.get("/spent/{currency}")
-def read_item(currency: str):
-    return {"sum spent in": currency, "total": spent[currency]}
-
 
 if __name__ == "__main__":
     uvicorn.run("kraken_main:app", host='127.0.0.1', port=8000, reload=True)

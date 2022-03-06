@@ -2,7 +2,9 @@ from apis.v1.route_login import login_for_access_token
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Request
+from fastapi import Depends
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from webapps.auth.forms import LoginForm
 
 
@@ -22,7 +24,7 @@ async def login(request: Request):
     if await form.is_valid():
         try:
             form.__dict__.update(msg="Login Successful!")
-            response = templates.TemplateResponse("login.html", form.__dict__)
+            response =  RedirectResponse(url='/dash')
             login_for_access_token(response=response, form_data=form)
             return response
         except HTTPException:
