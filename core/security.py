@@ -2,9 +2,6 @@ from enums.class_enumerators import TimeZones
 from typing import Optional
 from datetime import datetime, timedelta
 import pytz
-
-
-
 from core.config import settings
 from jose import jwt
 

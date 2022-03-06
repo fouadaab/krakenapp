@@ -29,6 +29,7 @@ class Settings:
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ACCESS_TOKEN_EXPIRE_MINUTES = 30*60  # 30*60s
+    TOKEN_BEARER_TAG = "Bearer "
     ALGORITHM = "HS256"
 
 

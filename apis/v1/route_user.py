@@ -11,7 +11,7 @@ def query_extractor(access_token: Optional[str] = Cookie(None)):
 
 
 def query_or_cookie_extractor(
-    q: str = Depends(query_extractor), last_query: Optional[str] = Cookie(None)
+    q: str = Depends(query_extractor), last_query: Optional[str] = ''
 ):
     if not q:
         return last_query

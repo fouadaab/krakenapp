@@ -52,15 +52,19 @@ def authenticate_user(username: str, password: str):
         return False
     return user
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        username: str = payload.get("sub")
+        payload = jwt.decode(
+            token.replace(settings.TOKEN_BEARER_TAG,''),
+            settings.SECRET_KEY,
+            algorithms=settings.ALGORITHM
+        )
+        username: str = payload.get("user")
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
@@ -89,10 +93,10 @@ def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"user": user.username}, expires_delta=access_token_expires
     )
     response.status_code = 302
     response.set_cookie(
-        key="access_token", value=f"Bearer {access_token}", httponly=True, max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+        key="access_token", value=settings.TOKEN_BEARER_TAG+access_token, httponly=True, max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     return {"access_token": access_token, "token_type": "bearer"}
