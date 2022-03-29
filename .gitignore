@@ -12,6 +12,9 @@ app
 *flask*
 *dash*
 
+# Private file to keep track and plan next steps
+next steps
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

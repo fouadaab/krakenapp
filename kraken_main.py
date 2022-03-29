@@ -3,17 +3,15 @@ from enums import class_enumerators
 from core.config import settings
 from apis.base import api_router
 from webapps.base import api_router as web_app_router
+from app.dashapp.app import mount_dash
 from krakenapi.api_client import API as kraken_api
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Cookie, HTTPException
 from fastapi.staticfiles import StaticFiles
 import utils
 import uvicorn
 from pathlib import Path
-import dash
-import dash_bootstrap_components as dbc
-from app.dashapp.layout import layout
-from app.dashapp.callbacks import register_callbacks
-from starlette.middleware.wsgi import WSGIMiddleware
+from typing import Optional
+
 
 
 root_path = Path('.')
@@ -49,6 +47,9 @@ trades_eur = {
 for val in trades_eur.values():
     spent[class_enumerators.Currency.EURO] += str2float(val['cost'])
 
+# def verify_token(access_token: Optional[str] = Cookie(None)):
+#     if not access_token:
+#         raise HTTPException(status_code=400, detail="Access-Token invalid")
 
 def include_router(app):
     app.include_router(api_router)
@@ -56,26 +57,14 @@ def include_router(app):
     
 def configure_static(app):
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    
-    # Meta tags for viewport responsiveness
-    meta_viewport = {"name": "viewport", "content": "width=device-width, initial-scale=1, shrink-to-fit=no"}
-
-    dashapp = dash.Dash(__name__,
-                         requests_pathname_prefix='/dash/',
-                         assets_folder= root_path / 'dashapp/assets',
-                         meta_tags=[meta_viewport],
-                         external_stylesheets=[dbc.themes.CERULEAN],
-			 prevent_initial_callbacks=False,
-			)
-
-    dashapp.title = 'Dashapp'    
-    dashapp.layout = layout
-    register_callbacks(dashapp)
-    
-    app.mount("/dash", WSGIMiddleware(dashapp.server))
+    mount_dash(app)
 
 def start_application():
-    app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
+    app = FastAPI(
+        title=settings.PROJECT_NAME,
+        version=settings.PROJECT_VERSION,
+        #dependencies=[Depends(verify_token)],
+    )
     include_router(app)
     configure_static(app)
     return app
@@ -84,6 +73,3 @@ app = start_application()
 
 if __name__ == "__main__":
     uvicorn.run("kraken_main:app", host='127.0.0.1', port=8000, reload=True)
-
-    # server = create_app()
-    # server.run(host=app_conf.config["host"], port=app_conf.config["port"])

@@ -1,16 +1,12 @@
 from fastapi import Depends, Cookie
-from fastapi import APIRouter
 from typing import Optional
 
 
-router = APIRouter()
-
-
-def query_extractor(access_token: Optional[str] = Cookie(None)):
+async def query_extractor(access_token: Optional[str] = Cookie(None)):
     return access_token
 
 
-def query_or_cookie_extractor(
+async def query_or_cookie_extractor(
     q: str = Depends(query_extractor), last_query: Optional[str] = ''
 ):
     if not q:

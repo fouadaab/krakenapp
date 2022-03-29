@@ -1,4 +1,5 @@
 from apis.v1.route_login import login_for_access_token
+from apis.v1.route_user import query_or_cookie_extractor
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Request
@@ -13,7 +14,10 @@ router = APIRouter(include_in_schema=False)
 
 
 @router.get("/login/")
-def login(request: Request):
+def login(request: Request, query_or_default: str = Depends(query_or_cookie_extractor)):
+    if query_or_default:
+        response =  RedirectResponse(url='/dash')
+        return response
     return templates.TemplateResponse("login.html", {"request": request})
 
 
