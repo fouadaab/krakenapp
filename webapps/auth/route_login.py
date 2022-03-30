@@ -11,11 +11,12 @@ from webapps.auth.forms import LoginForm
 
 templates = Jinja2Templates(directory="templates")
 router = APIRouter(include_in_schema=False)
-
+cookie_global = []
 
 @router.get("/login/")
-def login(request: Request, query_or_default: str = Depends(query_or_cookie_extractor)):
-    if query_or_default:
+def login(request: Request, cookie: str = Depends(query_or_cookie_extractor)):
+    if cookie:
+        cookie_global.append(cookie)
         response =  RedirectResponse(url='/dash')
         return response
     return templates.TemplateResponse("login.html", {"request": request})

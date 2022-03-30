@@ -3,14 +3,12 @@ from enums import class_enumerators
 from core.config import settings
 from apis.base import api_router
 from webapps.base import api_router as web_app_router
-from app.dashapp.app import mount_dash
 from krakenapi.api_client import API as kraken_api
-from fastapi import FastAPI, Depends, Cookie, HTTPException
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import utils
 import uvicorn
 from pathlib import Path
-from typing import Optional
 
 
 
@@ -57,13 +55,11 @@ def include_router(app):
     
 def configure_static(app):
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    mount_dash(app)
 
 def start_application():
     app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.PROJECT_VERSION,
-        #dependencies=[Depends(verify_token)],
     )
     include_router(app)
     configure_static(app)
