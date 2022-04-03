@@ -11,8 +11,8 @@ import uvicorn
 from pathlib import Path
 
 
-
 root_path = Path('.')
+    
 
 spent = defaultdict(float)
 def str2float(val: str) -> float:
@@ -44,10 +44,6 @@ trades_eur = {
 # Fill sum spent in EUR to hash table
 for val in trades_eur.values():
     spent[class_enumerators.Currency.EURO] += str2float(val['cost'])
-
-# def verify_token(access_token: Optional[str] = Cookie(None)):
-#     if not access_token:
-#         raise HTTPException(status_code=400, detail="Access-Token invalid")
 
 def include_router(app):
     app.include_router(api_router)

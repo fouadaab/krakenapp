@@ -5,14 +5,7 @@
 # Private foler(s)
 private
 
-# App folder (temporary)
-app
-
-# Flask and dash related (temporary)
-*flask*
-*dash*
-
-# Private file to keep track and plan next steps
+# private file to keep track and plan next steps
 next steps
 
 # Byte-compiled / optimized / DLL files
